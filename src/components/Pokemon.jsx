@@ -7,7 +7,7 @@ import PokemonCard from './PokemonCard';
 import { getPokemonSpriteUrl, fetchPokemon } from '../services/APIPokmeon';
 import { useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { addPokemonToCurrentUserInLocalStorage, deletePokemonToCurrentUserInLocalStorage, setUsersInLocalStorage, getUsersInLocalStorage } from '../services/users'
+import { addPokemonToCurrentUserInLocalStorage, deletePokemonFromCurrentUserInLocalStorage, setUsersInLocalStorage, getUsersInLocalStorage } from '../services/users'
 
 function Pokemon() {
 
@@ -23,10 +23,12 @@ function Pokemon() {
             setUser(userData);
         }
     }, []);
-
+    
     useEffect(() => {
-        if (user !== null) {
+        if (user != null) {
+            console.log("Utilisateur actuel récupéré : ", user.id);
             const updatedUsers = getUsersInLocalStorage().map(u => u.id === user.id ? user : u);
+            console.log(updatedUsers);
             setUsersInLocalStorage(updatedUsers);
         }
     }, [user])
@@ -47,7 +49,7 @@ function Pokemon() {
     }
 
     const handleDeletePokemon = () => {
-        deletePokemonToCurrentUserInLocalStorage(id);
+        deletePokemonFromCurrentUserInLocalStorage(id);
         setUser(getCurrentUser());
     }
 

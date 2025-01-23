@@ -1,6 +1,6 @@
 export const getUsersInLocalStorage = () => {
     const localStorageUsers = localStorage.getItem('users')
-    return JSON.parse(localStorageUsers)
+    return localStorageUsers ? JSON.parse(localStorageUsers) : []
 }
 
 export const setUsersInLocalStorage = (users) => {
@@ -8,8 +8,8 @@ export const setUsersInLocalStorage = (users) => {
 }
 
 export const getCurrentUser = () => {
-    const localStorageCurrentUser= localStorage.getItem('currentUser')
-    return JSON.parse(localStorageCurrentUser)
+    const localStorageCurrentUser = localStorage.getItem('currentUser')
+    return localStorageCurrentUser ? JSON.parse(localStorageCurrentUser) : null
 }
 
 export const removeCurrentUser = () => {
@@ -22,13 +22,17 @@ export const setCurrentUserInLocalStorage = (user) => {
 
 export const addPokemonToCurrentUserInLocalStorage = (id, pokemon) => {
     const currentUser = getCurrentUser();
-    currentUser.pokemon.push({id, pokemon});
-    setCurrentUserInLocalStorage(currentUser);
+    if (currentUser) {
+        currentUser.pokemon.push({ id, pokemon });
+        setCurrentUserInLocalStorage(currentUser);
+    }
 }
 
-export const deletePokemonToCurrentUserInLocalStorage = (id) => {
+export const deletePokemonFromCurrentUserInLocalStorage = (id) => {
     const currentUser = getCurrentUser();
-    const updatedPokemons = currentUser.pokemon.filter(pokemon => pokemon.id !== id);
-    currentUser.pokemon = updatedPokemons;
-    setCurrentUserInLocalStorage(currentUser);
+    if (currentUser) {
+        const updatedPokemons = currentUser.pokemon.filter(pokemon => pokemon.id !== id);
+        currentUser.pokemon = updatedPokemons;
+        setCurrentUserInLocalStorage(currentUser);
+    }
 }

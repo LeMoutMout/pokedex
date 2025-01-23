@@ -17,7 +17,7 @@ function Pokedex() {
             setUser(userData);
         }
     }, []);
-
+    
     return (
         <Page>
             <Box>

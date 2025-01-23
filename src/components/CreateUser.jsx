@@ -5,7 +5,7 @@ import image2 from '../assets/2.jpg'
 import image3 from '../assets/3.jpg'
 import { Button, Typography, Box, TextField, Avatar } from '@mui/material'
 import { useEffect, useState } from 'react'
-import { getUsersInLocalStorage, setUsersInLocalStorage } from '../services/users'
+import { getUsersInLocalStorage, setUsersInLocalStorage} from '../services/users'
 import { Link } from 'react-router-dom'
 
 function CreateUser() {
@@ -13,25 +13,26 @@ function CreateUser() {
     const [users, setUsers] = useState([])
     const [newUserName, setNewUserName] = useState('')
     const [newUserImage, setNewUserImage] = useState(image1)
+    const [index, setIndex] = useState(0)
 
     const handleAddUser = () => {
-        const updatedUsers = [...users, { 'name': newUserName, 'avatar': newUserImage, 'pokemon': [] }]
-        setUsers(updatedUsers)
-        setUsersInLocalStorage(updatedUsers)
-    }
+        setIndex((prevIndex) => {
+            const newId = prevIndex + 1;
+            const updatedUsers = [...users, { id: newId, name: newUserName, avatar: newUserImage, pokemon: [] }];
+            setUsers(updatedUsers);
+            setUsersInLocalStorage(updatedUsers);
+            return newId;
+        });
+    };
 
     useEffect(() => {
-        if (users.length > 0) {
-            setUsersInLocalStorage(users)
+        const usersFromStorage = getUsersInLocalStorage();
+        if (usersFromStorage && usersFromStorage.length > 0) {
+            setUsers(usersFromStorage);
+            const maxId = usersFromStorage.reduce((max, user) => Math.max(max, user.id), 0);
+            setIndex(maxId); 
         }
-    }, [users])
-
-    useEffect(() => {
-        const users = getUsersInLocalStorage()
-        if (users) {
-            setUsers(users)
-        }
-    }, [])
+    }, []);
 
     return (
         <Page>
